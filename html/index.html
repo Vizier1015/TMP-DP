@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<link href="<%= BASE_URL %>favicon.ico" rel="ico">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>临时发布</title>
+    <link rel="stylesheet" href="layui/css/layui.css">
+    <!-- <script src="https://cdn.staticfile.org/echarts/5.2.2/echarts.js"></script> -->
+    <style>
+        .layui-card-body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+</head>
+
+<body>
+
+
+    <form class="layui-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label">项目名称</label>
+            <div class="layui-input-inline">
+                <select id="project" name="project" lay-verify="required">
+                    <option value="">请选择项目</option>
+                    <option value="APP接口">APP接口</option>
+                    <option value="APPH5">APPH5</option>
+                    <option value="网站PC-WEB">网站PC-WEB</option>
+                    <option value="数据接口">数据接口</option>
+                    <option value="业务扩展">业务扩展</option>
+                    <option value="小程序接口">小程序接口</option>
+                    <option value="图谱项目">图谱项目</option>
+                    <option value="用户中心">用户中心</option>
+                    <option value="活动中心">活动中心</option>
+                    <option value="舆情管家接口">舆情管家接口</option>
+                    <option value="舆情管家前端">舆情管家前端</option>
+                    <option value="风控管家接口">风控管家接口</option>
+                    <option value="支付中心">支付中心</option>
+                    <option value="问答项目">问答项目</option>
+                    <option value="情报局">情报局</option>
+                    <option value="延时任务">延时任务</option>
+                    <option value="财产线索">财产线索</option>
+                    <option value="M站">M站</option>
+		    <option value="风控管家前端">风控管家前端</option>
+		    <option value="老风险项目(risk)">老风险项目(risk)</option>
+                </select>
+                <!--            <input type="text" name="title" required  lay-verify="required" placeholder="请选择项目" autocomplete="off" class="layui-input">-->
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">发布分类</label>
+            <div class="layui-input-inline">
+                <select id="category" name="category" lay-verify="required">
+                    <option value=""></option>
+                    <option value="功能BUG">功能BUG</option>
+                    <option value="产品经理需求">产品经理需求</option>
+                    <option value="老板需求">老板需求</option>
+                    <option value="测试未覆盖BUG">测试未覆盖BUG</option>
+                    <option value="数据BUG">数据BUG</option>
+                    <option value="UI BUG">UI BUG</option>
+
+                </select>
+            </div>
+        </div>
+	<div class="layui-form-item layui-form-text">
+	    <label class="layui-form-label">任务ID</label>
+	    <div class="layui-input-inline">
+                <textarea lay-verify="required" id="taskid" name="taskid" placeholder="填写TB中BUG|需求ID"
+                    class="layui-textarea"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">申请人</label>
+            <div class="layui-input-inline">
+                <textarea lay-verify="required" id="persion" name="persion" placeholder="仅填写当前申请人"
+                    class="layui-textarea"></textarea>
+            </div>
+        </div>
+
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">发版描述</label>
+            <div class="layui-input-block">
+                <textarea lay-verify="required" name="describe" placeholder="请输入内容" class="layui-textarea"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <!--            <button class="layui-btn layui-btn-normal" lay-submit  lay-filter="submitinfo">提交</button>-->
+                <!--            <button type="layui-btn" class="layui-btn layui-btn-primary">重置</button>-->
+                <button class="layui-btn" lay-submit lay-filter="sendmsg">发送</button>
+
+
+                <a href="http://tmpdp.dev.greatld.com/backend/getdatas" class="layui-btn layui-btn-normal">下载</a>
+            </div>
+
+
+
+            <script src="./layui/layui.js"></script>
+            <script>
+                layui.use(['form'], function () {
+                    const layer = layui.layer,
+                        form = layui.form,
+                        laypage = layui.laypage,
+                        element = layui.element,
+                        laydate = layui.laydate,
+                        $$ = layui.jquery,
+                        util = layui.util;
+
+                    //欢迎信息
+                    layer.msg('临时发版管理系统');
+
+                    //输出版本号
+                    // lay('#version').html(layui.v);
+
+                    //日期
+                    laydate.render({
+                        elem: '#test2',
+                        value: new Date(),
+                        isInitValue: true
+                    });
+                    //监听提交
+                    form.on('submit(submitinfo)', function (data) {
+                        $$.ajax({
+                            type: "POST",
+                            url: "http://tmpdp.dev.greatld.com/backend/tmpdp/getmsg",
+                            data: data.field,
+                            dataType: "JSON",
+                            success: function (result) {
+
+                                if (result.message === 'OK') {
+                                    layer.msg('提交成功');
+
+                                } else {
+                                    layer.msg("！！！");
+                                }
+
+                            }
+                        });
+                        return false
+
+                    });
+
+                    form.on('submit(sendmsg)', function (data) {
+                        $$.ajax({
+                            type: "POST",
+                            url: "http://tmpdp.dev.greatld.com/backend/sendmsg/sendmsg",
+                            data: data.field,
+                            dataType: "JSON",
+                            success: function (result) {
+                                if (result.message === 'ok') {
+                                    layer.msg('发送成功');
+                                } else {
+                                    layer.msg('发送失败');
+                                }
+
+                            }
+                        });
+                        return false
+                    });
+
+                    form.on('submit(getdatas)',function (data){
+                        $$.ajax({
+                            type: "GET",
+                            url: "http://127.0.0.1:8199/getdatas",
+
+                        });
+                        return false
+                    })
+
+
+                });
+            </script>
+
+
+
+        </div>
+
+
+
+        <div class="layui-card">
+            <div class="layui-card-header">分类统计饼图</div>
+            <div class="layui-card-body">
+                <div id="Echarts" style="width: 500px;height: 500px;"></div>
+                <div id="Echarts2" style="width: 500px;height: 500px;"></div>
+            </div>
+            <script>
+                layui.use(['layer', 'echarts'], function () {
+                    var $ = layui.jquery,
+                        layer = layui.layer,
+                        echarts = layui.echarts,
+                        $$ = layui.jquery;
+                    $$.ajax({
+                        type: "GET",
+                        url: "http://tmpdp.dev.greatld.com/backend/tmpdp/everyss/?category",
+                        success: function (result) {
+                            const {
+                                data
+                            } = JSON.parse(result)
+                            console.log(result);
+                            data.forEach(item => {
+                                item.name = item.category;
+                                item.value = item[`Count(*)`]
+                            })
+                            setChart(data, 'Echarts')
+                        }
+                    });
+                    $$.ajax({
+                        type: "GET",
+                        url: "http://tmpdp.dev.greatld.com/backend/tmpdp/everyps/?project",
+                        success: function (result) {
+                            const {
+                                data
+                            } = JSON.parse(result)
+
+                            data.forEach(item => {
+                                item.name = item.project;
+                                item.value = item[`COUNT(*)`]
+                            })
+                            console.log(123, data);
+                            setChart(data, 'Echarts2')
+                        }
+                    });
+
+                    function setChart(list, id) {
+                        var myChart = echarts.init(document.getElementById(id))
+                        var option;
+
+                        option = {
+                            title: {
+                                text: '临时发布统计',
+                                left: 'center'
+                            },
+                            tooltip: {
+                                trigger: 'item'
+                            },
+                            legend: {
+                                orient: 'vertical',
+                                left: 'left'
+                            },
+                            series: [{
+                                name: '发版次数',
+                                type: 'pie',
+                                radius: '50%',
+                                data: list,
+                                emphasis: {
+                                    itemStyle: {
+                                        shadowBlur: 10,
+                                        shadowOffsetX: 0,
+                                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                                    }
+                                }
+                            }]
+                        };
+
+                        option && myChart.setOption(option);
+                    }
+
+                })
+            </script>
+        </div>
+
+
+
+    </form>
+
+
+</body>
+
+</html>
